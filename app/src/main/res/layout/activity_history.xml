@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_fog"
+    android:orientation="vertical"
+    android:weightSum="1"
+    android:id="@+id/layout_fragment_bg"
+    tools:context="edu.csuft.fragment.ContentFragment">
+
+    <TextView
+        android:id="@+id/tv_today_show_time"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="2016-06-06"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="260dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/aqi_linear"
+            android:orientation="horizontal"
+            android:id="@+id/layout_aqi">
+
+            <ImageView
+                android:id="@+id/iv_today_aqi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/notif_level1" />
+
+            <TextView
+                android:id="@+id/tv_today_aqi"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:text="重度污染 49"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_today_cur_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="18度"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:textSize="50sp"
+            android:layout_alignTop="@+id/layout_aqi"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="17dp" />
+
+        <TextView
+            android:id="@+id/tv_today_update_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[8:00]"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:layout_above="@+id/tv_today_type"
+            android:layout_toRightOf="@+id/tv_today_cur_temp"
+            android:layout_toEndOf="@+id/tv_today_cur_temp" />
+
+        <TextView
+            android:id="@+id/tv_today_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_today_cur_temp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="5dp"
+            android:text="多云"
+            android:textSize="20sp"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+                <TextView
+                    android:id="@+id/tv_today_max_temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="22度"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    />
+                <TextView
+                    android:id="@+id/tv_today_min_temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white"
+                    android:text="18度"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+                <TextView
+                    android:id="@+id/tv_today_wind_direct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="南风"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    />
+                <TextView
+                    android:id="@+id/tv_today_wind_power"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:text="1级"
+                    android:textSize="20sp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="湿度"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    />
+                <TextView
+                    android:id="@+id/tv_today_humidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:text="65%"
+                    android:textSize="20sp"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/gv_weather_index"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/white"
+        android:numColumns="2" />
+</LinearLayout>
