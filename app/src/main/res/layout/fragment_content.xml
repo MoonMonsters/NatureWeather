@@ -9,7 +9,6 @@
         android:id="@+id/layout_fragment_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_fog"
         android:orientation="vertical"
         android:weightSum="1"
         tools:context="edu.csuft.fragment.ContentFragment">

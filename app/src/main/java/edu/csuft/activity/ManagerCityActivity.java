@@ -1,10 +1,7 @@
 package edu.csuft.activity;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,10 +24,9 @@ import edu.csuft.bean.Cities;
 import edu.csuft.bean.City;
 import edu.csuft.bean.ResponseBody;
 import edu.csuft.bean.SimpleCity;
-import edu.csuft.db.SqlDbHelper;
+import edu.csuft.db.WeatherDao;
 import edu.csuft.interfaces.IActivity;
 import edu.csuft.interfaces.IFragment;
-import edu.csuft.utils.Logger;
 import edu.csuft.utils.WeatherUtil;
 
 public class ManagerCityActivity extends BaseActivity {
@@ -47,7 +43,6 @@ public class ManagerCityActivity extends BaseActivity {
     private HashMap<String,String> cityMap = null;
     /** 用来在ListView中显示城市 */
     private ArrayList<SimpleCity> simpleCityList = null;
-    private SqlDbHelper helper;
 
     //适配器，后面在删除操作时需要用上
     ArrayAdapter simpleCityAdapter = null;
@@ -69,8 +64,9 @@ public class ManagerCityActivity extends BaseActivity {
     @Override
     public void initData() {
         responseBodyList = (ArrayList<ResponseBody>) getIntent().getSerializableExtra(IActivity.SAVE_DATA);
-        helper = new SqlDbHelper(this);
-
+        if(responseBodyList == null){
+            responseBodyList = new ArrayList<>();
+        }
         initListData();
         initAutoTextData();
         initMapSetData();
@@ -85,17 +81,7 @@ public class ManagerCityActivity extends BaseActivity {
      * 从本地将所有数据读取出来
      */
     private void initListData(){
-        simpleCityList = new ArrayList<>();
-        SQLiteDatabase readableDatabase = helper.getReadableDatabase();
-        Cursor cursor = readableDatabase.query("weather_city", new String[]{"city", "citycode"}, null, null, null, null, null);
-        while (cursor.moveToNext()) {
-            String city = cursor.getString(cursor.getColumnIndex("city"));
-            String citycode = cursor.getString(cursor.getColumnIndex("citycode"));
-            Logger.i("MANAGER","city-->"+city + "-->"+citycode);
-            simpleCityList.add(new SimpleCity(city,citycode));
-        }
-        cursor.close();
-        readableDatabase.close();
+        simpleCityList = WeatherDao.getSimpleCityListFromDB();
 
         simpleCityAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,simpleCityList);
         lv_add_city.setAdapter(simpleCityAdapter);
@@ -151,15 +137,8 @@ public class ManagerCityActivity extends BaseActivity {
         public void onClick(View v) {
             String city = getCityFromToString(actv_add_city.getText().toString());
             String citycode = getCitycode(actv_add_city.getText().toString());
-            /**
-             * 向数据库中写入城市名和城市编码
-             */
-            SQLiteDatabase writableDatabase = helper.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put("city",city);
-            values.put("citycode",citycode);
-            writableDatabase.insert("weather_city",null,values);
-            writableDatabase.close();
+
+            WeatherDao.doInsertIntoWeatherCity(city,citycode);
 
             inputToShared(city,citycode);
 
@@ -212,11 +191,7 @@ public class ManagerCityActivity extends BaseActivity {
         switch (item.getItemId()){
             //将某个城市设置为默认显示城市
             case R.id.action_default:
-                SharedPreferences.Editor editor = getSharedPreferences(IActivity.DEFAULT_CITY,MODE_PRIVATE).edit();
-                //将城市名和城市编码作为标志
-                editor.putString(IActivity.CITY,simpleCityList.get(position).getCity());
-                editor.putString(IActivity.CITYCODE,simpleCityList.get(position).getCitycode());
-                editor.commit();
+                setDefaultCity(position);
 
                 Toast.makeText(this,"将"+simpleCityList.get(position).getCity()+"设为默认城市",Toast.LENGTH_SHORT).show();
                 break;
@@ -231,6 +206,18 @@ public class ManagerCityActivity extends BaseActivity {
     }
 
     /**
+     * 将某个城市设置成默认显示城市
+     * @param position 该城市在List中的位置
+     */
+    private void setDefaultCity(int position) {
+        SharedPreferences.Editor editor = getSharedPreferences(IActivity.DEFAULT_CITY,MODE_PRIVATE).edit();
+        //将城市名和城市编码作为标志
+        editor.putString(IActivity.CITY,simpleCityList.get(position).getCity());
+        editor.putString(IActivity.CITYCODE,simpleCityList.get(position).getCitycode());
+        editor.commit();
+    }
+
+    /**
      * 将城市从数据库和集合中删除
      * @param position 位置
      */
@@ -238,7 +225,7 @@ public class ManagerCityActivity extends BaseActivity {
         SimpleCity city = simpleCityList.get(position);
 
         //从数据库中删除数据
-        WeatherUtil.doDeleteDataFromDatabase(city.getCity(),city.getCitycode());
+        WeatherDao.doDeleteDataFromDatabase(city.getCity(),city.getCitycode());
 
         //从列表中删除
         simpleCityList.remove(position);

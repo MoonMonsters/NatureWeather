@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -87,9 +86,6 @@ public class ContentFragment extends Fragment {
 
     //横向ListView，用来记录每小时的天气
     private HorizontalListView hlv_weather_hourly = null;
-
-    //ListView，用来记录未来几天的天气
-    private ListView lv_weather_daily = null;
 
     //GridView的对象,用来显示指数
     private GridView gv_weather_index = null;

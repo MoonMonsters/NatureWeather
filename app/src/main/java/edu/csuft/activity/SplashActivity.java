@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import edu.csuft.bean.ResponseBody;
 import edu.csuft.db.SqlDbHelper;
 import edu.csuft.interfaces.IFragment;
-import edu.csuft.utils.Logger;
 import edu.csuft.utils.WeatherUtil;
 
 /**
@@ -67,22 +66,15 @@ public class SplashActivity extends BaseActivity {
                 //获得城市数目
                 int count = cursor.getCount();
 
-                String cities[] = null;
-                String citycodes[] = null;
                 if(count == 0){     //如果数据库没有数据，则定位取得
-                    //定位取得城市位置
-                    String city = "长沙";
-                    String citycode = "101250101";
-
-                    cities = new String[1];
-                    citycodes = new String[1];
-                    cities[0] = city;
-                    citycodes[0] = citycode;
-                    count = 1;
+                    Intent intent = new Intent(SplashActivity.this,ManagerCityActivity.class);
+                    startActivity(intent);
+                    SplashActivity.this.finish();
                 }else{      //否则从数据库中取得
                     int index = 0;
-                    cities = new String[count];
-                    citycodes = new String[count];
+                    String cities[] = new String[count];
+                    String citycodes[] = new String[count];
+
                     //取出所有城市数据
                     while (cursor.moveToNext()){
                         String city = cursor.getString(cursor.getColumnIndex("city"));
@@ -91,17 +83,15 @@ public class SplashActivity extends BaseActivity {
                         citycodes[index] = citycode;
                         index ++;
                     }
-                }
 
-                ArrayList<ResponseBody> responseBodyList = new ArrayList<>();
-                for(int i=0; i<count; i++){
-                    Logger.i("RES","i = " + i);
-                    ResponseBody responseBody = WeatherUtil.request(cities[i],citycodes[i]);
-                    responseBodyList.add(responseBody);
+                    ArrayList<ResponseBody> responseBodyList = new ArrayList<>();
+                    for(int i=0; i<count; i++){
+                        ResponseBody responseBody = WeatherUtil.request(cities[i],citycodes[i]);
+                        responseBodyList.add(responseBody);
+                    }
+                    //进入主界面
+                    enterMainActivity(responseBodyList);
                 }
-                Logger.i("RES","出来了...");
-                //进入主界面
-                enterMainActivity(responseBodyList);
 
             }
         }).start();
