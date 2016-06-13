@@ -26,7 +26,6 @@ import edu.csuft.bean.SimpleCity;
 import edu.csuft.fragment.ContentFragment;
 import edu.csuft.interfaces.IActivity;
 import edu.csuft.interfaces.IFragment;
-import edu.csuft.utils.Logger;
 
 /**
  * 主界面
@@ -142,9 +141,6 @@ public class MainActivity extends BaseActivity {
 
         String city = sharedPreferences.getString(IActivity.CURRENT_ITEM_CITY, defaultCity);
         String citycode = sharedPreferences.getString(IActivity.CURRENT_ITEM_CITYCODE, defaultCitycode);
-
-        Logger.i("DEFAULT", "city-->" + city);
-        Logger.i("DEFAULT", "citycode-->" + citycode);
 
         for (int i = 0; i < responseBodyList.size(); i++) {
             Result result = responseBodyList.get(i).getResult();

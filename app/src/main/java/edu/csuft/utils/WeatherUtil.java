@@ -61,7 +61,6 @@ public class WeatherUtil {
             reader.close();
             result = sbf.toString();
 
-            Logger.i("TAG", result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -207,8 +206,6 @@ public class WeatherUtil {
         } else {
             resId = R.drawable.bg_default;
         }
-
-        Logger.i("TAG","天气类型-->"+type);
 
         return resId;
     }
