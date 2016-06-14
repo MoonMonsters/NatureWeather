@@ -7,7 +7,7 @@ import android.util.Log;
  * email:qxinhai@yeah.net
  */
 public class Logger {
-    private static boolean flag = false;
+    private static boolean flag = true;
 
     public static void i(String tag, String msg) {
         if (flag) {

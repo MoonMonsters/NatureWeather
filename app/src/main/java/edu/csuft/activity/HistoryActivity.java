@@ -23,6 +23,7 @@ import edu.csuft.bean.Index;
 import edu.csuft.bean.SimpleCity;
 import edu.csuft.db.SqlDbHelper;
 import edu.csuft.interfaces.IActivity;
+import edu.csuft.utils.Logger;
 import edu.csuft.utils.WeatherUtil;
 import edu.csuft.view.AqiDetailDialog;
 import edu.csuft.view.IndexDetailsDialog;
@@ -124,7 +125,6 @@ public class HistoryActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
         //显示时间
         tv_today_show_time.setText(getTopShowTime());
 
@@ -169,18 +169,20 @@ public class HistoryActivity extends BaseActivity {
             indexList.add(index);
         }
 
-        cursorAqi.close();
-        cursorIndex.close();
         /*
         获得顶部数据
          */
         Cursor cursorMain = readableDatabase.query("weather_daily", null, "city=? and citycode=? and date=?",
                 new String[]{simpleCity.getCity(),simpleCity.getCitycode(),date}, null, null, null);
+
         setMainData(cursorMain);
 
         setAqiData();
         setIndexData();
 
+        cursorAqi.close();
+        cursorIndex.close();
+        cursorMain.close();
         readableDatabase.close();
     }
 
@@ -188,10 +190,13 @@ public class HistoryActivity extends BaseActivity {
      * 设置顶部的数据
      * @param cursorMain 游标
      */
-    private void setMainData(Cursor cursorMain){
+    private void setMainData(Cursor cursorMain) {
         if(cursorMain.moveToNext()){
+            Logger.i("TAG",cursorMain.getCount()+"");
             String weather = cursorMain.getString(cursorMain.getColumnIndex("weather"));
             tv_today_type.setText(weather);
+            Logger.i("TAG",weather);
+            layout_fragment_bg.setBackgroundResource(WeatherUtil.getBgPicFromWeatherType(weather));
 
             String temphigh = cursorMain.getString(cursorMain.getColumnIndex("temphigh"));
             tv_today_max_temp.setText(temphigh + "°");
@@ -211,8 +216,6 @@ public class HistoryActivity extends BaseActivity {
             String humidity = cursorMain.getString(cursorMain.getColumnIndex("humidity"));
             tv_today_humidity.setText(humidity + "%");
         }
-
-        cursorMain.close();
     }
 
     /**
@@ -227,7 +230,9 @@ public class HistoryActivity extends BaseActivity {
      * 设置aqi相关数据
      */
     private void setAqiData(){
+        Logger.i("TAG","setAqiData");
         iv_today_aqi.setImageResource(WeatherUtil.getAqiPicFromValue(aqi.getAqi()));
+        Logger.i("TAG",aqi.getAqi()+"");
         tv_today_aqi.setText(aqi.getAqi() + " " + aqi.getQuality());
     }
 
